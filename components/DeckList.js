@@ -6,6 +6,7 @@ import { purple, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 import DeckCard from './DeckCard'
 import DeckDetail from './DeckDetail'
+import { fetchDecks } from '../utils/api'
 
 deckList = [
   {
@@ -41,29 +42,44 @@ deckList = [
   }
 ]
 
-function SubmitBtn ({ onPress }) {
-  return (
-    <TouchableOpacity
-      style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
-      onPress={onPress}>
-        <Text style={styles.submitBtnText}>SUBMIT</Text>
-    </TouchableOpacity>
-  )
-}
-
 class DeckList extends Component {
+  state = {
+    ready: false,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getDecks()
+  }
+
+  componentDidMount() {
+    this.getDecks()
+  }
+
+  getDecks() {
+    fetchDecks()
+    .then(results => this.setState({ decks: results }))
+    .then(() => this.setState(() => ({ready: true})))
+    .catch(error => console.log("Api error:" + error))
+  }
+
+  static navigationOptions = {
+    title: 'Decks',
+  }
+
   render() {
+    const { decks } = this.state
+
     return (
       <ScrollView style={styles.container}>
-        {deckList.map(deck => {
+        {decks && Object.keys(decks).map(deck => {
           return (
             <TouchableOpacity
-              style={styles.deck} key={deck.title}
+              style={styles.deck} key={decks[deck].title}
               onPress={() => this.props.navigation.navigate(
               'DeckDetail',
-              { deck }
+              { deck: decks[deck] }
             )}>
-              <DeckCard deck={deck} />
+              <DeckCard deck={decks[deck]} />
             </TouchableOpacity>
           )
         })}

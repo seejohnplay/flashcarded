@@ -4,17 +4,9 @@ import { white } from '../utils/colors'
 import DeckCard from './DeckCard'
 import GenericButton from './GenericButton'
 
-class DeckDetail extends Component {
+class PlayQuiz extends Component {
   static navigationOptions = {
-    title: 'Deck',
-  }
-
-  reset = () => {
-    const { goBack } = this.props.navigation
-    goBack()
-  }
-
-  shouldComponentUpdate (nextProps) {
+    title: 'Play Quiz',
   }
 
   render() {
@@ -22,18 +14,19 @@ class DeckDetail extends Component {
 
     return (
       <View style={styles.container}>
+        <Text>Play Quiz</Text>
         <DeckCard deck={deck} />
         <GenericButton
           label='Add Card'
           onPress={() => this.props.navigation.navigate(
-            'AddCard',
+            'DeckDetail',
             { deck }
           )}
         />
         <GenericButton
           label='Start Quiz'
           onPress={() => this.props.navigation.navigate(
-            'PlayQuiz',
+            'DeckDetail',
             { deck }
           )}
         />
@@ -45,11 +38,9 @@ class DeckDetail extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
     backgroundColor: white,
     padding: 15,
   },
 })
 
-export default DeckDetail
+export default PlayQuiz

@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
 import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { connect } from 'react-redux'
 import { purple, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
+import GenericButton from './GenericButton'
+import { submitDeck } from '../utils/api'
 
-function SubmitBtn ({ onPress }) {
-  return (
-    <TouchableOpacity
-      style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
-      onPress={onPress}>
-        <Text style={styles.submitBtnText}>SUBMIT</Text>
-    </TouchableOpacity>
-  )
-}
 class NewDeck extends Component {
   constructor(props) {
     super(props)
@@ -23,15 +15,13 @@ class NewDeck extends Component {
   submit = () => {
     // validate title for uniqueness?
 
-    // persist deck in data store
+    const key = this.state.text
+    const entry = {title: this.state.text, questions: []}
+    submitDeck ({ entry, key })
 
     this.setState({text: ''})
     Keyboard.dismiss()
-    this.toHome()
-  }
-
-  toHome = () => {
-    this.props.navigation.dispatch(NavigationActions.back({key: 'NewDeck'}))
+    this.props.navigation.navigate('DeckList', {ready: false})
   }
 
   render() {
@@ -46,7 +36,7 @@ class NewDeck extends Component {
           onChangeText={(text) => this.setState({text})}
           value={this.state.text}
         />
-        <SubmitBtn onPress={this.submit} />
+        <GenericButton label='SUBMIT' onPress={this.submit} />
       </View>
     )
   }
@@ -62,30 +52,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
-  },
-  iosSubmitBtn: {
-    backgroundColor: purple,
-    padding: 10,
-    borderRadius: 7,
-    height: 45,
-    marginLeft: 40,
-    marginRight: 40,
-  },
-  AndroidSubmitBtn: {
-    backgroundColor: purple,
-    padding: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    height: 45,
-    borderRadius: 2,
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  submitBtnText: {
-    color: white,
-    fontSize: 22,
-    textAlign: 'center',
   },
   center: {
     flex: 1,

@@ -4,9 +4,11 @@ import { TabNavigator, StackNavigator } from 'react-navigation'
 import { purple, white } from './utils/colors'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Constants } from 'expo'
+import AddCard from './components/AddCard'
 import DeckDetail from './components/DeckDetail'
 import DeckList from './components/DeckList'
 import NewDeck from './components/NewDeck'
+import PlayQuiz from './components/PlayQuiz'
 
 function FlashcardedStatusBar ({backgroundColor, ...props}) {
   return (
@@ -55,6 +57,15 @@ const MainNavigator = StackNavigator({
   Home: {
     screen: Tabs,
   },
+  AddCard: {
+    screen: AddCard,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      }
+    }
+  },
   DeckDetail: {
     screen: DeckDetail,
     navigationOptions: {
@@ -66,6 +77,15 @@ const MainNavigator = StackNavigator({
   },
   DeckList: {
     screen: DeckList,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      }
+    }
+  },
+  PlayQuiz: {
+    screen: PlayQuiz,
     navigationOptions: {
       headerTintColor: white,
       headerStyle: {
