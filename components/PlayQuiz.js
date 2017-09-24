@@ -6,9 +6,7 @@ import DeckCard from './DeckCard'
 import GenericButton from './GenericButton'
 
 class PlayQuiz extends Component {
-  static navigationOptions = {
-    title: 'Play Quiz',
-  }
+  static navigationOptions = { title: 'Quiz', header: null }
 
   componentWillMount() {
     const { deck } = this.props.navigation.state.params
@@ -30,37 +28,43 @@ class PlayQuiz extends Component {
   }
 
   render() {
+    const { deck, getDecks } = this.props.navigation.state.params
+
     if (this.state.currentQuestion) {
       return (
         <View style={styles.container}>
-          <Text style={{fontSize: 25}}>{this.currentQuestionNumber()}/{this.state.totalQuestions}</Text>
-          <Text style={{fontSize: 40}}>{this.state.showAnswer
-            ? this.state.currentQuestion.answer
-            : this.state.currentQuestion.question}</Text>
-          <TouchableOpacity onPress={this.onPress}>
-          <Text style={{fontSize: 30, color: 'purple'}}>{this.state.showAnswer
-            ? "Question"
-            : "Answer"}</Text>
-          </TouchableOpacity>
-          <GenericButton
-            label='Correct'
-            onPress={() => {
-              this.setState({
-                totalCorrect: this.state.totalCorrect + 1,
-                currentQuestion: this.state.questions.pop(),
-                showAnswer: false
-              })
-            }}
-          />
-          <GenericButton
-            label='Incorrect'
-            onPress={() => {
-              this.setState({
-                currentQuestion: this.state.questions.pop(),
-                showAnswer: false
-              })
-            }}
-          />
+          <View style={styles.centeredContainer}>
+            <Text style={{fontSize: 25}}>Question {this.currentQuestionNumber()} of {this.state.totalQuestions}</Text>
+            <Text style={{fontSize: 40}}>{this.state.showAnswer
+              ? this.state.currentQuestion.answer
+              : this.state.currentQuestion.question}</Text>
+            <TouchableOpacity onPress={this.onPress}>
+            <Text style={{fontSize: 30, color: 'purple'}}>{this.state.showAnswer
+              ? "Question"
+              : "Answer"}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, justifyContent: 'space-around'}}>
+            <GenericButton
+              label='Correct'
+              onPress={() => {
+                this.setState({
+                  totalCorrect: this.state.totalCorrect + 1,
+                  currentQuestion: this.state.questions.pop(),
+                  showAnswer: false
+                })
+              }}
+            />
+            <GenericButton
+              label='Incorrect'
+              onPress={() => {
+                this.setState({
+                  currentQuestion: this.state.questions.pop(),
+                  showAnswer: false
+                })
+              }}
+            />
+          </View>
         </View>
       )
     } else {
@@ -69,8 +73,26 @@ class PlayQuiz extends Component {
 
       return (
         <View style={styles.container}>
-          <Text style={{fontSize: 40}}>Total score:</Text>
-          <Text style={{fontSize: 40}}>{this.state.totalCorrect}/{this.state.totalQuestions}</Text>
+          <View style={styles.centeredContainer}>
+            <Text style={{fontSize: 40}}>Total score:</Text>
+            <Text style={{fontSize: 40}}>{this.state.totalCorrect} out of {this.state.totalQuestions}</Text>
+          </View>
+          <View style={{flex: 1, justifyContent: 'space-around'}}>
+            <GenericButton
+              label='Restart Quiz'
+              onPress={() => this.props.navigation.navigate(
+                'PlayQuiz',
+                { deck }
+              )}
+            />
+            <GenericButton
+              label='Back to Deck'
+              onPress={() => this.props.navigation.navigate(
+                'DeckDetail',
+                { deck, getDecks: getDecks }
+              )}
+            />
+          </View>
         </View>
       )
     }
@@ -82,10 +104,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignItems: 'center',
     backgroundColor: white,
-    padding: 15,
   },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  }
 })
 
 export default PlayQuiz

@@ -28,21 +28,25 @@ class DeckDetail extends Component {
 
     return (
       <View style={styles.container}>
-        <DeckCard deck={deck} />
-        <GenericButton
-          label='Add Card'
-          onPress={() => this.props.navigation.navigate(
-            'AddCard',
-            { deck, updateDeck: this.updateDeck }
-          )}
-        />
-        <GenericButton
-          label='Start Quiz'
-          onPress={() => this.props.navigation.navigate(
-            'PlayQuiz',
-            { deck }
-          )}
-        />
+        <View style={styles.container}>
+          <DeckCard deck={deck} />
+        </View>
+        <View style={{flex: 1, justifyContent: 'space-around'}}>
+          <GenericButton
+            label='Add Card'
+            onPress={() => this.props.navigation.navigate(
+              'AddCard',
+              { deck, updateDeck: this.updateDeck }
+            )}
+          />
+          <GenericButton
+            label='Start Quiz'
+            onPress={() => this.props.navigation.navigate(
+              'PlayQuiz',
+              { deck, getDecks: this.props.navigation.state.params.getDecks }
+            )}
+          />
+        </View>
       </View>
     )
   }

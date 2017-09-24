@@ -1,32 +1,34 @@
 import React, { Component } from 'react'
 import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { purple, white } from '../utils/colors'
+import { purple, red, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 import GenericButton from './GenericButton'
-import { submitDeck } from '../utils/api'
+import { fetchDeck, submitDeck } from '../utils/api'
 
 class NewDeck extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
+  state = {}
 
   submit = () => {
-    // validate title for uniqueness?
+    if (this.state.text) {
+      const key = this.state.text
+      const entry = {title: this.state.text, questions: []}
+      submitDeck ({ entry, key })
 
-    const key = this.state.text
-    const entry = {title: this.state.text, questions: []}
-    submitDeck ({ entry, key })
-
-    this.setState({text: ''})
-    Keyboard.dismiss()
-    this.props.navigation.navigate('DeckList', {ready: false})
+      this.setState({text: '', showValidationMessage: false})
+      Keyboard.dismiss()
+      this.props.navigation.navigate('DeckList', { ready: false })
+    } else {
+      this.setState({ showValidationMessage: true })
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
+        { this.state.showValidationMessage &&
+          <Text style={{color: red, marginBottom: 10}} >Please enter a unique deck name!</Text> }
+
         <Text style={{textAlign: 'center', fontSize: 30}}>
           What is the title of your new deck?
         </Text>
@@ -36,7 +38,7 @@ class NewDeck extends Component {
           onChangeText={(text) => this.setState({text})}
           value={this.state.text}
         />
-        <GenericButton label='SUBMIT' onPress={this.submit} />
+        <GenericButton label='Create Deck' onPress={this.submit} />
       </View>
     )
   }
