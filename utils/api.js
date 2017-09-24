@@ -12,6 +12,10 @@ export function fetchDecks () {
     })
 }
 
+export function fetchDeck(title) {
+  return fetchDecks().then(results => results[title])
+}
+
 export function submitDeck ({ entry, key }) {
   return AsyncStorage.mergeItem(FLASHCARDED_STORAGE_KEY, JSON.stringify({
     [key]: entry

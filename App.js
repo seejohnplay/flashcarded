@@ -4,6 +4,7 @@ import { TabNavigator, StackNavigator } from 'react-navigation'
 import { purple, white } from './utils/colors'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Constants } from 'expo'
+import { setLocalNotification } from './utils/helpers'
 import AddCard from './components/AddCard'
 import DeckDetail from './components/DeckDetail'
 import DeckList from './components/DeckList'
@@ -96,6 +97,10 @@ const MainNavigator = StackNavigator({
 })
 
 export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification()
+  }
+
   render() {
     return (
       <View style={{flex: 1}}>

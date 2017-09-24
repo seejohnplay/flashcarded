@@ -3,22 +3,28 @@ import { Button, View, Text, StyleSheet } from 'react-native'
 import { white } from '../utils/colors'
 import DeckCard from './DeckCard'
 import GenericButton from './GenericButton'
+import { fetchDeck, submitDeck } from '../utils/api'
 
 class DeckDetail extends Component {
   static navigationOptions = {
     title: 'Deck',
   }
 
-  reset = () => {
-    const { goBack } = this.props.navigation
-    goBack()
+  componentWillMount() {
+    this.setState({ deck: this.props.navigation.state.params.deck })
   }
 
-  shouldComponentUpdate (nextProps) {
+  updateDeck = (entry, key) => {
+    submitDeck ({ entry, key })
+
+    this.props.navigation.state.params.getDecks()
+
+    fetchDeck(key)
+    .then(deck => this.setState({ deck: deck }))
   }
 
   render() {
-    const { deck } = this.props.navigation.state.params
+    const { deck } = this.state
 
     return (
       <View style={styles.container}>
@@ -27,7 +33,7 @@ class DeckDetail extends Component {
           label='Add Card'
           onPress={() => this.props.navigation.navigate(
             'AddCard',
-            { deck }
+            { deck, updateDeck: this.updateDeck }
           )}
         />
         <GenericButton

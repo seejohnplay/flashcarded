@@ -55,7 +55,7 @@ class DeckList extends Component {
     this.getDecks()
   }
 
-  getDecks() {
+  getDecks = () => {
     fetchDecks()
     .then(results => this.setState({ decks: results }))
     .then(() => this.setState(() => ({ready: true})))
@@ -77,7 +77,7 @@ class DeckList extends Component {
               style={styles.deck} key={decks[deck].title}
               onPress={() => this.props.navigation.navigate(
               'DeckDetail',
-              { deck: decks[deck] }
+              { deck: decks[deck], getDecks: this.getDecks }
             )}>
               <DeckCard deck={decks[deck]} />
             </TouchableOpacity>
