@@ -38,14 +38,7 @@ const styles = StyleSheet.create({
     color: white,
     fontSize: 22,
     textAlign: 'center',
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 30,
-    marginRight: 30,
-  },
+  }
 })
 
 export default GenericButton

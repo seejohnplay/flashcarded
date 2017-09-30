@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import { purple, red, white } from '../utils/colors'
+import { Keyboard, StyleSheet, Text, TextInput, View } from 'react-native'
+import { red, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 import GenericButton from './GenericButton'
 
@@ -32,7 +31,7 @@ class AddCard extends Component {
       <View style={styles.container}>
         <Text>Deck: {title}</Text>
         { this.state.showValidationMessage &&
-          <Text style={{color: red, marginTop: 10}} >Please enter both a question and an answer!</Text> }
+          <Text style={styles.validationMessage} >Please enter both a question and an answer!</Text> }
         <TextInput
           style={styles.textInput}
           placeholder='Question'
@@ -57,18 +56,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: white
   },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 30,
-    marginRight: 30,
-  },
   textInput: {
     height: 40,
     borderWidth: 1,
@@ -76,6 +63,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 40,
     marginBottom: 40
+  },
+  validationMessage: {
+    color: red,
+    marginTop: 10
   }
 })
 

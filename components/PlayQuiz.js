@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { white } from '../utils/colors'
+import { green, red, white } from '../utils/colors'
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
 import DeckCard from './DeckCard'
 import GenericButton from './GenericButton'
@@ -29,19 +29,28 @@ class PlayQuiz extends Component {
 
   render() {
     const { deck, getDecks } = this.props.navigation.state.params
+    const {
+      currentQuestion,
+      questions,
+      showAnswer,
+      totalCorrect,
+      totalQuestions
+    } = this.state
 
-    if (this.state.currentQuestion) {
+    if (currentQuestion) {
       return (
         <View style={styles.container}>
           <View style={styles.centeredContainer}>
-            <Text style={{fontSize: 25}}>Question {this.currentQuestionNumber()} of {this.state.totalQuestions}</Text>
-            <Text style={{fontSize: 40}}>{this.state.showAnswer
-              ? this.state.currentQuestion.answer
-              : this.state.currentQuestion.question}</Text>
+            <Text style={{fontSize: 25}}>
+              Question {this.currentQuestionNumber()} of {totalQuestions}
+            </Text>
+            <Text style={{fontSize: 40}}>
+              {showAnswer ? currentQuestion.answer : currentQuestion.question}
+            </Text>
             <TouchableOpacity onPress={this.onPress}>
-            <Text style={{fontSize: 30, color: 'purple'}}>{this.state.showAnswer
-              ? "Question"
-              : "Answer"}</Text>
+            <Text style={{fontSize: 30, color: 'purple'}}>
+              {showAnswer ? 'Question' : 'Answer'}
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={{flex: 1, justifyContent: 'space-around'}}>
@@ -49,8 +58,8 @@ class PlayQuiz extends Component {
               label='Correct'
               onPress={() => {
                 this.setState({
-                  totalCorrect: this.state.totalCorrect + 1,
-                  currentQuestion: this.state.questions.pop(),
+                  totalCorrect: totalCorrect + 1,
+                  currentQuestion: questions.pop(),
                   showAnswer: false
                 })
               }}
@@ -59,7 +68,7 @@ class PlayQuiz extends Component {
               label='Incorrect'
               onPress={() => {
                 this.setState({
-                  currentQuestion: this.state.questions.pop(),
+                  currentQuestion: questions.pop(),
                   showAnswer: false
                 })
               }}
@@ -75,7 +84,7 @@ class PlayQuiz extends Component {
         <View style={styles.container}>
           <View style={styles.centeredContainer}>
             <Text style={{fontSize: 40}}>Total score:</Text>
-            <Text style={{fontSize: 40}}>{this.state.totalCorrect} out of {this.state.totalQuestions}</Text>
+            <Text style={{fontSize: 40}}>{totalCorrect} out of {totalQuestions}</Text>
           </View>
           <View style={{flex: 1, justifyContent: 'space-around'}}>
             <GenericButton

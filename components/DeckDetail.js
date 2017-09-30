@@ -3,11 +3,19 @@ import { Button, View, Text, StyleSheet } from 'react-native'
 import { white } from '../utils/colors'
 import DeckCard from './DeckCard'
 import GenericButton from './GenericButton'
+import { NavigationActions } from 'react-navigation'
 import { fetchDeck, submitDeck } from '../utils/api'
 
 class DeckDetail extends Component {
-  static navigationOptions = {
-    title: 'Deck',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Deck',
+      headerLeft: <Button
+        title='Decks'
+        color='#ffffff'
+        onPress={ () => { navigation.navigate('Home', {}) }}
+      />
+    }
   }
 
   componentWillMount() {
@@ -31,7 +39,7 @@ class DeckDetail extends Component {
         <View style={styles.container}>
           <DeckCard deck={deck} />
         </View>
-        <View style={{flex: 1, justifyContent: 'space-around'}}>
+        <View style={styles.buttonContainer}>
           <GenericButton
             label='Add Card'
             onPress={() => this.props.navigation.navigate(
@@ -60,6 +68,10 @@ const styles = StyleSheet.create({
     backgroundColor: white,
     padding: 15,
   },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'space-around'
+  }
 })
 
 export default DeckDetail

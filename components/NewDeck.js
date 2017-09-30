@@ -1,23 +1,42 @@
 import React, { Component } from 'react'
-import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import { purple, red, white } from '../utils/colors'
+import { Keyboard, StyleSheet, Text, TextInput, View } from 'react-native'
+import { red, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 import GenericButton from './GenericButton'
-import { fetchDeck, submitDeck } from '../utils/api'
+import { fetchDeck, fetchDecks, submitDeck } from '../utils/api'
 
 class NewDeck extends Component {
-  state = {}
+  state = {
+    title: ''
+  }
+
+  getDecks = () => {
+    fetchDecks()
+    .then(results => this.setState({ decks: results }))
+  }
 
   submit = () => {
-    if (this.state.text) {
-      const key = this.state.text
-      const entry = {title: this.state.text, questions: []}
-      submitDeck ({ entry, key })
+    const key = this.state.title.trim()
 
-      this.setState({text: '', showValidationMessage: false})
-      Keyboard.dismiss()
-      this.props.navigation.navigate('DeckList', { ready: false })
+    if (key) {
+      const entry = {title: key, questions: []}
+
+      fetchDeck(key)
+      .then(existingDeckName => {
+        if(existingDeckName) {
+          this.setState({ showValidationMessage: true })
+        } else {
+          submitDeck ({ entry, key })
+
+          fetchDeck(key)
+          .then(newDeck => {
+            this.setState({text: '', showValidationMessage: false})
+            Keyboard.dismiss()
+            this.props.navigation.navigate('DeckDetail', { deck: newDeck, getDecks: this.getDecks })
+          })
+          .catch(error => console.log('Api error: ' + error))
+        }
+      })
     } else {
       this.setState({ showValidationMessage: true })
     }
@@ -27,16 +46,16 @@ class NewDeck extends Component {
     return (
       <View style={styles.container}>
         { this.state.showValidationMessage &&
-          <Text style={{color: red, marginBottom: 10}} >Please enter a unique deck name!</Text> }
+          <Text style={styles.validationMessage} >Please enter a unique deck name!</Text> }
 
-        <Text style={{textAlign: 'center', fontSize: 30}}>
+        <Text style={styles.centered}>
           What is the title of your new deck?
         </Text>
         <TextInput
           style={styles.textInput}
           placeholder='Title'
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
+          onChangeText={(title) => this.setState({title})}
+          value={this.state.title}
         />
         <GenericButton label='Create Deck' onPress={this.submit} />
       </View>
@@ -50,17 +69,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: white
   },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 30,
-    marginRight: 30,
+  centered: {
+    textAlign: 'center',
+    fontSize: 30
   },
   textInput: {
     height: 40,
@@ -69,6 +80,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 40,
     marginBottom: 40
+  },
+  validationMessage: {
+    color: red,
+    marginBottom: 10
   }
 })
 

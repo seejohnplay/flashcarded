@@ -13,21 +13,15 @@ export function fetchDecks () {
 }
 
 export function fetchDeck(title) {
-  return fetchDecks().then(results => results[title])
+  return fetchDecks().then(results => results ? results[title] : null)
 }
 
 export function submitDeck ({ entry, key }) {
   return AsyncStorage.mergeItem(FLASHCARDED_STORAGE_KEY, JSON.stringify({
     [key]: entry
   }))
-}
-
-export function removeDeck (key) {
-  return AsyncStorage.getItem(FLASHCARDED_STORAGE_KEY)
-    .then((results) => {
-      const data = JSON.parse(results)
-      data[key] = undefined
-      delete data[key]
-      AsyncStorage.setItem(FLASHCARDED_STORAGE_KEY, JSON.stringify(data))
-    })
+  .catch(function(error) {
+    console.log('There has been a problem with your submit operation: ' + error.message)
+    throw error
+  })
 }

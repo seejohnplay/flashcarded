@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity, Text, ScrollView, StyleSheet, Platform } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import { connect } from 'react-redux'
-import { purple, white } from '../utils/colors'
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 import DeckCard from './DeckCard'
 import DeckDetail from './DeckDetail'
 import { fetchDecks } from '../utils/api'
 
 class DeckList extends Component {
+  static navigationOptions = {
+    title: 'Decks',
+  }
+
   state = {
-    ready: false,
+    decks: []
   }
 
   componentWillReceiveProps(nextProps) {
@@ -24,12 +26,13 @@ class DeckList extends Component {
   getDecks = () => {
     fetchDecks()
     .then(results => this.setState({ decks: results }))
-    .then(() => this.setState(() => ({ready: true})))
-    .catch(error => console.log("Api error:" + error))
   }
 
-  static navigationOptions = {
-    title: 'Decks',
+  handlePress = (deck) => {
+    this.props.navigation.navigate(
+      'DeckDetail',
+      { deck: deck, getDecks: this.getDecks }
+    )
   }
 
   render() {
@@ -37,16 +40,14 @@ class DeckList extends Component {
 
     return (
       <ScrollView style={styles.container}>
-        {decks && Object.keys(decks).map(deck => {
+        {decks && Object.keys(decks).map((deck, index) => {
           return (
-            <TouchableOpacity
-              style={styles.deck} key={decks[deck].title}
-              onPress={() => this.props.navigation.navigate(
-              'DeckDetail',
-              { deck: decks[deck], getDecks: this.getDecks }
-            )}>
-              <DeckCard deck={decks[deck]} />
-            </TouchableOpacity>
+            <DeckCard
+              clickable={true}
+              deck={decks[deck]}
+              handlePress={this.handlePress}
+              key={index}
+            />
           )
         })}
       </ScrollView>
@@ -58,25 +59,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: white
-  },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-  },
-  deck: {
-    paddingTop: 80,
-    paddingBottom: 80,
-    flexDirection: 'row',
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-
   },
 })
 
