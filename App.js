@@ -104,7 +104,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <FlashcardedStatusBar backgroundColor={purple} barStyle="light-content" />
+        <FlashcardedStatusBar backgroundColor={purple} barStyle='light-content' />
         <MainNavigator />
       </View>
     );

@@ -33,6 +33,7 @@ class DeckDetail extends Component {
 
   render() {
     const { deck } = this.state
+    const { navigate, state } = this.props.navigation
 
     return (
       <View style={styles.container}>
@@ -42,16 +43,14 @@ class DeckDetail extends Component {
         <View style={styles.buttonContainer}>
           <GenericButton
             label='Add Card'
-            onPress={() => this.props.navigation.navigate(
-              'AddCard',
+            onPress={() => navigate('AddCard',
               { deck, updateDeck: this.updateDeck }
             )}
           />
           <GenericButton
             label='Start Quiz'
-            onPress={() => this.props.navigation.navigate(
-              'PlayQuiz',
-              { deck, getDecks: this.props.navigation.state.params.getDecks }
+            onPress={() => navigate('PlayQuiz',
+              { deck, getDecks: state.params.getDecks }
             )}
           />
         </View>
